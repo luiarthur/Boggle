@@ -1,0 +1,3 @@
+#!/bin/bash
+./boggle dictionary.txt board.txt out.txt
+vi out.txt
