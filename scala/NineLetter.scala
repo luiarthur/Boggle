@@ -1,5 +1,7 @@
 import scala.util.Random.shuffle
 
+// NOT DONE. TODO
+
 object NineLetter {
   private val dictionary = io.Source.fromFile("dictionary.txt").getLines.toList
 
