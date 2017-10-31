@@ -1,2 +1,0 @@
-#!/bin/bash
-g++ -g -Wall -o boggle *.cpp 
