@@ -15,6 +15,10 @@ object NineLetter {
     val (a,b) = x.splitAt(i)
     a + b.tail
   }
+  def smallDictionary(word:String) = {
+    val wordSet = word.toSet
+    dictionary.filter(w => wordSet.subsetOf(w.toSet))
+  }
 
 
   def find(input:String) = {
@@ -34,7 +38,7 @@ object NineLetter {
       }
     }
 
-    search("", input, List(), dictionary).distinct.sorted
+    search("", input, List(), smallDictionary(input)).distinct.sorted
   }
 
 
