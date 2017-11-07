@@ -6,11 +6,11 @@ object NineLetter {
   //private val dictionary = io.Source.fromFile("dictionary.txt").getLines.toList
   private val dictionary = io.Source.fromFile("big_dict.txt").getLines.toList
 
-  def isValidWord(w:String) = dictionary.contains(w)
-  def candidates(w:String) = {
-    dictionary.filter(_.take(w.size) == w)
+  def isValidWord(w:String, dict:List[String]) = dict.contains(w)
+  def candidates(w:String, dict:List[String]) = {
+    dict.filter(_.take(w.size) == w)
   }
-  def isPotentialWord(w:String) = w == "" || candidates(w).size > 0
+  def isPotentialWord(w:String, dict:List[String]) = w == "" || candidates(w,dict).size > 0
   def removeAt(x:String, i:Int) = {
     val (a,b) = x.splitAt(i)
     a + b.tail
@@ -21,19 +21,20 @@ object NineLetter {
     //val words = collection.mutable.Set[String]()
     //val visited = collection.mutable.Set[String]()
 
-    def search(curr:String, remains:String, words:List[String]):List[String] = {
-      if (remains == "" || remains > ""  && !isPotentialWord(curr)) {
-        if (isValidWord(curr)) curr :: words else words
+    def search(curr:String, remains:String, words:List[String], dict:List[String]):List[String] = {
+      if (remains == "" || remains > ""  && !isPotentialWord(curr,dict)) {
+        if (isValidWord(curr,dict)) curr :: words else words
       } else  {
         val idxLeft = List.range(0, remains.size)
         idxLeft.par.flatMap{i => 
-          val newWords = if (isValidWord(curr)) curr :: words else words
-          search(curr + remains(i), removeAt(remains, i), newWords)
+          val newDict = candidates(curr,dict)
+          val newWords = if (isValidWord(curr,newDict)) curr :: words else words
+          search(curr + remains(i), removeAt(remains, i), newWords, newDict)
         }.distinct.toList
       }
     }
 
-    search("", input, List()).distinct.sorted
+    search("", input, List(), dictionary).distinct.sorted
   }
 
 
