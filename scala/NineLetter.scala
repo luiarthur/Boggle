@@ -3,6 +3,14 @@ import scala.util.Random.shuffle
 // NOT DONE. TODO
 
 object NineLetter {
+  def timer[R](block: => R) = {
+    val t0 = System.nanoTime()
+    val result = block
+    val t1 = System.nanoTime()
+    println("Elapsed time: " + (t1 - t0) / 1E9 + "s")
+    result
+  }
+
   //private val dictionary = io.Source.fromFile("dictionary.txt").getLines.toList
   private val dictionary = io.Source.fromFile("big_dict.txt").getLines.toList
 
@@ -31,6 +39,7 @@ object NineLetter {
       } else  {
         val idxLeft = List.range(0, remains.size)
         idxLeft.par.flatMap{i => 
+        //idxLeft.flatMap{i => 
           val newDict = candidates(curr,dict)
           val newWords = if (isValidWord(curr,newDict)) curr :: words else words
           search(curr + remains(i), removeAt(remains, i), newWords, newDict)
@@ -45,7 +54,7 @@ object NineLetter {
   def main(args:Array[String]) {
     val input = args(0)
     println("Here is the input: " + input)
-    val words = find(input)
+    val words = timer { find(input) }
     println("Here is the result:")
     words.filter(_.size == input.size).foreach(println)
   }
