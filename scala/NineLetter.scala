@@ -55,8 +55,9 @@ object NineLetter {
     val input = args(0)
     println("Here is the input: " + input)
     val words = timer { find(input) }
-    println("Here is the result:")
+    println("\nHere is the result:")
     words.filter(_.size == input.size).foreach(println)
+    println
   }
 }
 
