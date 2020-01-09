@@ -139,7 +139,7 @@ fun makeBoradFromFile(fname: String): BoggleBoard {
 val board = makeBoradFromFile("misc/dice.txt")
 // board.shuffle()
 
-// val dict = File("../scala/big_dict.txt").readLines()
+// val dict = File("../scala/big_dict.txt").readLines().map{w -> w.toUpperCase()}
 val dict = File("misc/scrabble_dict.txt").readLines()
 val d = dict.filter{word -> word.length <= 16 && word.length >= 3}
 
