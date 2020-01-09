@@ -52,7 +52,6 @@ class BoggleBoard(val dice: Array<Die>) {
   }
 
   fun display() {
-    println(value)
     value.forEach {
       // row -> println(row.joinToString(","))
       row -> row.forEach {
@@ -63,18 +62,37 @@ class BoggleBoard(val dice: Array<Die>) {
   }
 
   // TODO
-  fun solve(dict: List<String>, solution: List<String> = listOf(), 
-            path: List<Pair<Int, Int>> = listOf(Pair(0, 0)),
-            minLetters: Int = 3): List<String> {
-    if (path.last() == Pair(rows, cols)) return solution else {
-      return listOf("Bob")
-      /* TODO
-      For each starting position, make every possible chain.
-      Cut off the chain if it's not a real word.
-       */
+  fun solve(dict: List<String>,
+            path: List<Pair<Int, Int>>,
+            solution: List<String> = listOf(), 
+            minLetters: Int = 3,
+            _dict: List<String> = listOf()): List<String> {
+    if (dict.size == 0) {
+      return solution
+    } else {
+      // All valid moves
+      val validMoves = allMoves.filter{move -> isValidMove(path, move)}
+
+      // Create each possible chain
+      val sols = validMoves.map { move ->
+        val newPath = path + listOf(makeMove(path, move))
+        val head = chain(newPath)
+        val newDict = dict.filter{word -> word.startsWith(head)}
+        val newSolution = if (newDict.contains(head)) {
+          solution + listOf(head)
+        } else {
+          solution
+        }
+        solve(newDict, newPath, newSolution, minLetters, _dict)
+      } 
+
+      return sols.flatten().distinct()
     }
   }
 
+  fun chain(path: List<Pair<Int, Int>>): String {
+    return path.map{(r, c) -> value[r][c]}.joinToString("")
+  }
 
   fun visited(path: List<Pair<Int, Int>>, pos: Pair<Int, Int>): Boolean {
     return path.contains(pos)
@@ -85,12 +103,24 @@ class BoggleBoard(val dice: Array<Die>) {
     return r >= 0 && c >= 0 && r < rows && c < cols
   }
 
-  fun isValidMove(path: List<Pair<Int, Int>>, move: Pair<Int, Int>): Boolean {
-    val (r, c) = path[0]
+  fun makeMove(path: List<Pair<Int, Int>>, move: Pair<Int, Int>): Pair<Int, Int> {
+    val (r, c) = path.last()
     val (a, b) = move
-    val pos = Pair(r + a, c + b)
+    return Pair(r + a, c + b)
+  }
 
+  fun isValidMove(path: List<Pair<Int, Int>>, move: Pair<Int, Int>): Boolean {
+    val pos = makeMove(path, move)
     return (!visited(path, pos)) && onBoard(pos)
+  }
+
+  fun solveAll(dict: List<String>): List<String> {
+    val allSolutions = List(rows) {
+      r -> List(cols) {
+        c -> solve(dict, listOf(Pair(r, c)))
+      }.flatten()
+    }
+    return allSolutions.flatten().distinct()
   }
 }
 
@@ -105,14 +135,14 @@ fun makeBoradFromFile(fname: String): BoggleBoard {
 }
 
 
-// Test
+// MAIN
 val board = makeBoradFromFile("misc/dice.txt")
-board.shuffle()
+// board.shuffle()
+
+// val dict = File("../scala/big_dict.txt").readLines()
+val dict = File("misc/scrabble_dict.txt").readLines()
+val d = dict.filter{word -> word.length <= 16 && word.length >= 3}
+
 board.display()
-
-
-val dict = File("../scala/big_dict.txt").readLines()
-val d = dict.filter{word -> word.length <= 16 && word.length >= 2}
-
-val solution = board.solve(d)
-solution.forEach{word -> println(word)}
+println("Hit Enter to see solution ..."); readLine()
+println(board.solveAll(d).sorted())
