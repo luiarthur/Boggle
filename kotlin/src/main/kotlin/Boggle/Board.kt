@@ -132,7 +132,7 @@ class Board(val dice: Array<Die> = readDice(),
     path: Array<Coord>,
     solution: Array<String> = arrayOf()): Array<String> {
 
-    if (dict.size == 0) {return solution} else {
+    if (dict.size == 0) return solution else {
       // All valid moves
       val validMoves = allMoves.filter{move -> isValidMove(path, move)}
 
