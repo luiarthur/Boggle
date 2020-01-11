@@ -23,7 +23,8 @@ object Helper {
 
   val defaultDict: js.Array[String] = {
     //Helper.readLinesFromResourceDir("/dict.txt").toJSArray
-    js.Array("BAN", "NAB", "ANN", "CAN")
+    js.Array("BAN", "NAB", "ANN", "CAN", "BANANA")
+
   }
 }
 
