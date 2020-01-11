@@ -23,11 +23,17 @@ case class Board(dice: js.Array[Die] = Helper.defaultDice,
   val ncol = nrow
 
   @JSExport
-  val letters = new Matrix(dice.toArray.map(_.roll), nrow, ncol)
+  var letters = (new Matrix(dice.toArray.map(_.roll), nrow, ncol))
   letters.shuffle
 
   @JSExport
-  def shuffle(): Unit = letters.shuffle()
+  val shortDict = dictionary.filter(w => w.length >= minLetters)
+
+  @JSExport
+  def shuffle(): Unit = {
+    letters = (new Matrix(dice.toArray.map(_.roll), nrow, ncol))
+    letters.shuffle
+  }
 
   private val allMoves = Vector(
     Coord(0, 1),
@@ -68,10 +74,12 @@ case class Board(dice: js.Array[Die] = Helper.defaultDice,
   @JSExport
   def solve(): js.Array[String] = {
     val allSolutions = Array.tabulate(nrow, ncol){
-      (r, c) => _solve(dictionary, Array(Coord(r, c)))
+      (r, c) => _solve(shortDict, Array(Coord(r, c)))
     }.map(_.flatten)
 
     return allSolutions.flatten.distinct.toJSArray
+                       .sorted
+                       .sortBy(_.length)
   }
 
   private def _solve(dict: js.Array[String], path: Array[Coord],
@@ -83,7 +91,7 @@ case class Board(dice: js.Array[Die] = Helper.defaultDice,
       // Create each possible chain, given current path.
       val sols = validMoves.map{move =>
         val newPath = path :+ makeMove(path, move)
-        val head = chain(newPath)
+        val head = chain(newPath).toUpperCase
         val newDict = dict.filter(word => word.startsWith(head))
         val newSolution = if (newDict.contains(head)) solution :+ head else solution
         _solve(newDict, newPath, newSolution)

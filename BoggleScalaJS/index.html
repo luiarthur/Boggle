@@ -2,6 +2,50 @@
 
 <head>
   <script src="target/scala-2.12/bogglescalajs-fastopt.js"></script>
+  <script src="assets/js/jquery.min.js"></script>
+
+  <script>
+    // Wait for `get` to finish before doing next thing.
+    // That is, do things synchronously, instead of asynchronously.
+    $.ajaxSetup({async: false});
+
+    // Array to store dice
+    var dice = [];
+
+    // Read dice and store into `dice`
+    $.get('/assets/txt/dice.txt', function(data) {
+      var lines = data.trim().split("\n");
+      console.log('Number of dice: ', lines.length)
+
+      for (i = 0; i < lines.length; i++) {
+        var faces = lines[i].split(',');
+        dice.push(new Die(faces));
+      }
+    });
+
+    // Var to store dictionary
+    var dict = null;
+    // Read dice and store into `dict`
+    $.get('/assets/txt/scrabble_dict.txt', function(data) {
+      dict = data.trim().split("\n");
+      console.log('Vocabulary size: ', dict.length)
+    });
+
+    // Set up board.
+    var board = null;
+    var solution = null;
+    
+    board = Board(dice, dict);
+    board.shuffle();
+
+    console.log("Board:");
+    console.log(board.toString());
+    console.log();
+
+    solution = board.solve();
+    console.log("Solutions:");
+    console.log(solution.join(", "));
+  </script>
 </head>
 
 </html>
