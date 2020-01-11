@@ -12,3 +12,4 @@ enablePlugins(ScalaJSPlugin)
 
 // This is an application with a main method
 // scalaJSUseMainModuleInitializer := true
+

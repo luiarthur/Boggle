@@ -18,12 +18,12 @@ object Helper {
     // val lines = Helper.readLinesFromResourceDir("/dice.txt")
     // val dice = lines.map(line => Die(line.toUpperCase.split(",").toJSArray))
     // dice.toJSArray
-    Array.fill(9)(Die(js.Array("A", "E", "N", "C", "F", "R", "O"))).toJSArray
+    Array.fill(16)(Die(js.Array("A", "B", "N"))).toJSArray
   }
 
   val defaultDict: js.Array[String] = {
-    Helper.readLinesFromResourceDir("/dict.txt").toJSArray
-    // js.Array("NAN", "FAN", "AAA", "CEN", "CAN", "RAN", "RER", "CAR", "CORE", "FORCE")
+    //Helper.readLinesFromResourceDir("/dict.txt").toJSArray
+    js.Array("BAN", "NAB", "ANN", "CAN")
   }
 }
 

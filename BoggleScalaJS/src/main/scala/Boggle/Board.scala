@@ -43,7 +43,7 @@ case class Board(dice: js.Array[Die] = Helper.defaultDice,
   override def toString() = letters.toString()
 
   def chain(path: Array[Coord]): String = {
-    return path.map(coord => letters(coord.x, coord.y)).mkString("")
+    path.map(coord => letters(coord.x, coord.y)).mkString("")
   }
 
   def visited(path: Array[Coord], pos: Coord): Boolean = {
@@ -76,7 +76,7 @@ case class Board(dice: js.Array[Die] = Helper.defaultDice,
 
   private def _solve(dict: js.Array[String], path: Array[Coord],
                      solution: Array[String]=Array()): Array[String] = {
-    if (dice.size == 0) return solution else {
+    if (dict.size == 0) return solution else {
       // All valid moves
       val validMoves = allMoves.filter{move => isValidMove(path, move)}
 

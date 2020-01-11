@@ -25,6 +25,11 @@ class TestSuite extends FunSuite {
     println()
   }
 
+  test("Path contains Coord") {
+    val path = Array(Coord(1,0), Coord(2, 2))
+    assert(path.contains(Coord(2, 2)))
+  }
+
   test("Solve Board") {
     import scala.scalajs.js
     import js.JSConverters._
