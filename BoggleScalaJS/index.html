@@ -48,4 +48,33 @@
   </script>
 </head>
 
+<body>
+
+<div id="board" style='font-family: monospace; font-size: 25'>
+</div>
+
+<div id="solution" style='font-family: monospace; font-size: 15; width: 50%'>
+</div>
+
+</body>
+
+<script>
+  var boardRows = board.toString().split('\n');
+  for (r in boardRows) {
+    row = boardRows[r].trim().split(/\s/).filter(function(w) {
+      return w.length > 0;
+    });
+
+    row = row.map(function(w) {
+      return w.padEnd(3);
+    }).join(' ');
+
+    console.log(row);
+
+    $("#board").append(`<p>${row.replace(/\s/g, '&nbsp')}</p>`);
+  }
+
+  $("#solution").append(`<p>${solution.join(', ')}</p>`);
+</script>
+
 </html>
